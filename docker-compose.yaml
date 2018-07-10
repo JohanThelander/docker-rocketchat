@@ -1,0 +1,32 @@
+version: '2'
+services:
+  mongo:
+    image: mongo
+    command:
+    - mongod
+    - --smallfiles
+    - --oplogSize
+    - '128'
+  rocketchat:
+    image: rocketchat/rocket.chat:latest
+    environment:
+      MONGO_URL: mongodb://mongo:27017/rocketchat
+      PORT: '3000'
+      ROOT_URL: http://yourhost:3000
+    links:
+    - mongo:mongo
+    ports:
+    - 3000:3000/tcp
+  hubot:
+    image: rocketchat/hubot-rocketchat
+    environment:
+      BOT_NAME: bot
+      EXTERNAL_SCRIPTS: hubot-help,hubot-seen,hubot-links,hubot-diagnostics
+      ROCKETCHAT_PASSWORD: botpassword
+      ROCKETCHAT_ROOM: GENERAL
+      ROCKETCHAT_URL: rocketchat:3000
+      ROCKETCHAT_USER: bot
+    links:
+    - rocketchat:rocketchat
+    ports:
+    - 3001:8080/tcp
