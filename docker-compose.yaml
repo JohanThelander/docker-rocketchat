@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   mongo:
     image: mongo
@@ -7,16 +7,22 @@ services:
     - --smallfiles
     - --oplogSize
     - '128'
+    deploy:
+      replicas: 1
+      update_config:
+        delay: 10s
   rocketchat:
     image: rocketchat/rocket.chat:latest
     environment:
       MONGO_URL: mongodb://mongo:27017/rocketchat
       PORT: '3000'
-      ROOT_URL: http://yourhost:3000
-    links:
-    - mongo:mongo
+      ROOT_URL: http://0.0.0.0:3000
     ports:
-    - 3000:3000/tcp
+    - 9090:3000/tcp
+    deploy:
+      replicas: 1
+      update_config:
+        delay: 10s
   hubot:
     image: rocketchat/hubot-rocketchat
     environment:
@@ -26,7 +32,9 @@ services:
       ROCKETCHAT_ROOM: GENERAL
       ROCKETCHAT_URL: rocketchat:3000
       ROCKETCHAT_USER: bot
-    links:
-    - rocketchat:rocketchat
     ports:
-    - 3001:8080/tcp
+    - 3001:8080
+    deploy:
+      replicas: 1
+      update_config:
+        delay: 10s    
