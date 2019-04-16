@@ -7,6 +7,10 @@ services:
     - --smallfiles
     - --oplogSize
     - '128'
+    deploy:
+      replicas: 1
+      update_config:
+      delay: 10s
   rocketchat:
     image: rocketchat/rocket.chat:latest
     environment:
@@ -17,6 +21,10 @@ services:
     - mongo:mongo
     ports:
     - 3000:3000/tcp
+    deploy:
+      replicas: 1
+      update_config:
+      delay: 10s
   hubot:
     image: rocketchat/hubot-rocketchat
     environment:
@@ -30,3 +38,7 @@ services:
     - rocketchat:rocketchat
     ports:
     - 3001:8080/tcp
+    deploy:
+      replicas: 1
+      update_config:
+      delay: 10s    
